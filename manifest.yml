@@ -5,6 +5,12 @@ url_to_dependency_map:
   - match: python-(\d+\.\d+\.\d+)
     name: python
     version: $1
+  - match: Miniconda2-(\d+\.\d+\.\d+)
+    name: miniconda2
+    version: $1
+  - match: Miniconda3-(\d+\.\d+\.\d+)
+    name: miniconda3
+    version: $1
   - match: libmemcache
     name: libmemcache
     version: 1.0.18
@@ -25,6 +31,18 @@ dependencies:
       - cflinuxfs2
     uri: https://pivotal-buildpacks.s3.amazonaws.com/python/binaries/cflinuxfs2/libffi.tar.gz
     md5: 83028a299b8ac323bda8a56c5c70d4cd
+  - name: miniconda2
+    version: 4.0.5
+    cf_stacks:
+      - cflinuxfs2
+    uri: https://repo.continuum.io/miniconda/Miniconda2-4.0.5-Linux-x86_64.sh
+    md5: 42dac45eee5e58f05f37399adda45e85
+  - name: miniconda3
+    version: 4.0.5
+    cf_stacks:
+      - cflinuxfs2
+    uri: https://repo.continuum.io/miniconda/Miniconda3-4.0.5-Linux-x86_64.sh
+    md5: b1b15a3436bb7de1da3ccc6e08c7a5df
   - name: python
     version: 2.7.10
     cf_stacks:

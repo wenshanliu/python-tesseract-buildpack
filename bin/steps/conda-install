@@ -15,12 +15,15 @@
 # limitations under the License.
 #
 
+
 echo "-----> Starting compile step..."
 BUILD_DIR=$1
 CACHE=$2
+BP_DIR=$3
+source $BP_DIR/bin/utils
 
 BASH=$(which bash)
-WGET=$(which wget)
+CURL=$(which curl)
 CONDA_HOME="$1/.conda"
 CONDA_BIN="$CONDA_HOME/bin"
 RUNTIME="$BUILD_DIR/runtime.txt"
@@ -31,14 +34,17 @@ if [ -e $RUNTIME ]; then
     if [ ${PYTHON_VERSION:0:1} -eq 3 ]; then
         PYTHON_MAJOR_VERSION=3
     else
-        PYTHON_MAJOR_VERSION=""
+        PYTHON_MAJOR_VERSION=2
     fi
-    MINICONDA_FILE="Miniconda$PYTHON_MAJOR_VERSION-latest-Linux-x86_64.sh"
+    MINICONDA_VERSION=`ruby -ryaml -e "puts YAML.load(File.open('$BP_DIR/manifest.yml'))['dependencies'].find { |x| x['name'] == 'miniconda2' }['version']"`
+    MINICONDA_FILE="Miniconda$PYTHON_MAJOR_VERSION-$MINICONDA_VERSION-Linux-x86_64.sh"
 else
-    MINICONDA_FILE="Miniconda-latest-Linux-x86_64.sh"
+    MINICONDA_FILE="Miniconda2-$MINICONDA_VERSION-Linux-x86_64.sh"
 fi
 
 MINICONDA_URI="http://repo.continuum.io/miniconda/$MINICONDA_FILE"
+translated_url=$($BP_DIR/compile-extensions/bin/translate_dependency_url $MINICONDA_URI) || exit_code=$?
+echo translated_url: $translated_url
 MINICONDA_CACHE="$CACHE/$MINICONDA_FILE"
 
 PROFILE_PATH="$BUILD_DIR/.profile.d/conda.sh"
@@ -47,7 +53,7 @@ echo "-----> Preparing Python Environment..."
 if [ ! -e $MINICONDA_CACHE ] ; then
     echo "-----> Downloading Miniconda..."
     if [ ! -d $CACHE ]; then mkdir $CACHE; fi
-    $WGET -q -O $MINICONDA_CACHE $MINICONDA_URI
+    $CURL $translated_url -o $MINICONDA_CACHE
     chmod +x $MINICONDA_CACHE
 fi
 if [ -e $CONDA_HOME ]; then rm -rf $CONDA_HOME; fi

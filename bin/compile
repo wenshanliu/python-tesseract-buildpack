@@ -30,7 +30,7 @@ ENV_DIR=$3
 # Use microconda if environment.yml exists and exit
 if [ -f $BUILD_DIR/environment.yml ]; then
   echo "----------------- USING CONDA BUILDPACK -----------------"
-  $BIN_DIR/steps/conda-install $BUILD_DIR $CACHE_DIR
+  $BIN_DIR/steps/conda-install $BUILD_DIR $CACHE_DIR $ROOT_DIR
   exit 0
 fi
 
