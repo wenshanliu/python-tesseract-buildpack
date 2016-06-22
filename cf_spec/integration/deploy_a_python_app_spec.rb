@@ -191,6 +191,9 @@ HERE
         specify do
           expect(app).to be_running(120)
 
+          # Check that scipy was installed in the logs
+          expect(app).to have_logged("scipy")
+
           browser.visit_path('/')
           expect(browser).to have_body('numpy: 1.10.4')
           expect(browser).to have_body('scipy: 0.17.0')
@@ -203,7 +206,9 @@ HERE
           expect(app).to be_running(120)
           Machete.push(app)
           expect(app).to be_running(120)
-          expect(app).to have_logged("Using dependency cache")
+
+          # Check that scipy was not re-installed in the logs
+          expect(app).to_not have_logged("scipy")
         end
 
         it "it updates dependencies if environment.yml changes" do
