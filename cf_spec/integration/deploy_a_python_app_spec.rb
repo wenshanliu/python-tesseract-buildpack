@@ -53,7 +53,6 @@ HERE
 
             browser.visit_path('/')
             expect(browser).to have_body('Hello, World!')
-            expect(app).to have_logged(/Downloaded \[file:\/\/.*\]/)
 
             expect(app).not_to have_internet_traffic
 
@@ -101,7 +100,7 @@ HERE
 
             browser.visit_path('/')
             expect(browser).to have_body('Hello, World!')
-            expect(app).to have_logged(/Downloaded \[file:\/\/.*\]/)
+
           end
         end
         context 'deploy a django web app' do
